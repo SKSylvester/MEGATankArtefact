@@ -1,13 +1,12 @@
 using System.Collections;
 using System.Collections.Generic;
-using UnityEditorInternal;
 using UnityEngine;
 
 public class Quaternions
 {
     public float w, x, y, z;
  
-   //public Quaternion(float Angle, MyVector3 Axis)
+   //public Quaternion(float Angle, MyVector2 Axis)
     //{
          
       //  float halfAngle = Angle / 2;

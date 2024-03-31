@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class MathsLib
 {
-    public static float VectorToRadians(MyVector3 v)
+    public static float VectorToRadians(MyVector2 v)
     {
         float rv = 0.0f;
 
@@ -12,9 +12,9 @@ public class MathsLib
 
         return rv;
     }
-    public static MyVector3 RadiansToVector(float angle)
+    public static MyVector2 RadiansToVector(float angle)
     {
-        MyVector3 rv = new MyVector3(Mathf.Cos(angle), Mathf.Sin(angle), 0);
+        MyVector2 rv = new MyVector2(Mathf.Cos(angle), Mathf.Sin(angle));
 
         return rv;
     }

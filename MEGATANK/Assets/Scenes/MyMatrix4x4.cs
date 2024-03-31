@@ -36,32 +36,32 @@ public class MyMatrix4x4
         values[2, 3] = Column4.z;
         values[3, 3] = Column4.w;
     }
-    public MyMatrix4x4(MyVector3 Column1, MyVector3 Column2, MyVector3 Column3, MyVector3 Column4)
+    public MyMatrix4x4(MyVector2 Column1, MyVector2 Column2, MyVector2 Column3, MyVector2 Column4)
     {
         values = new float[4, 4];
 
         // Column1
         values[0, 0] = Column1.x;
         values[1, 0] = Column1.y;
-        values[2, 0] = Column1.z;
+        values[2, 0] = 0;
         values[3, 0] = 0;
 
         // Column2 
         values[0, 1] = Column2.x;
         values[1, 1] = Column2.y;
-        values[2, 1] = Column2.z;
+        values[2, 1] = 0;
         values[3, 1] = 0;
 
         //column3 
         values[0, 2] = Column3.x;
         values[1, 2] = Column3.y;
-        values[2, 2] = Column3.z;
+        values[2, 2] = 0;
         values[3, 2] = 0;
 
         //column4
         values[0, 3] = Column4.x;
         values[1, 3] = Column4.y;
-        values[2, 3] = Column4.z;
+        values[2, 3] = 0;
         values[3, 3] = 0;
     }
 
