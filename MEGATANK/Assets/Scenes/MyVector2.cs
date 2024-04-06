@@ -7,7 +7,7 @@ public class MyVector2
 {
     public float x;
     public float y;
-
+    public float z;
 
     public Vector2[] Vertices { get; }
 
@@ -52,17 +52,17 @@ public class MyVector2
         return new MyVector2(0, -1);
     }
 
-    public MyVector2(UnityEngine.Vector3 UnityVector3) //Converts Unity Vector into my own MyVector3.
+    public MyVector2(UnityEngine.Vector2 UnityVector2) //Converts Unity Vector into my own MyVector2.
     {
-        this.x = UnityVector3.x;
-        this.y = UnityVector3.y;
-
+        this.x = UnityVector2.x;
+        this.y = UnityVector2.y;
     }
 
-    public MyVector2(UnityEngine.Quaternion UnityVector3)
+    public MyVector2(UnityEngine.Quaternion UnityVector2)
     {
-        this.x = UnityVector3.x;
-        this.y = UnityVector3.y;
+        this.x = UnityVector2.x;
+        this.y = UnityVector2.y;
+        this.z = UnityVector2.z;
     }
 
 
@@ -216,6 +216,7 @@ public class MyVector2
         //Values stored in EulerAngles must be in Radians
         return rv;
     }
+
 
 
     public static MyVector2 CrossProduct(MyVector2 v1, MyVector2 v2)

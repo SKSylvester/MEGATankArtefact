@@ -4,64 +4,70 @@ using UnityEngine;
 
 public class PlayerTank : MonoBehaviour
 {
-    public MyVector2 Rotation;
-    public MyVector2 mouseRotation;
-    public MyVector2 mousePosition;
-    public MyVector2 lastmousePosition;
-    public MyVector2 MouseDelta;
-    public MyVector2 eulerRotation;
-    public MyVector2 eulerAngle;
-    public MyVector2 up = MyVector2.Up();
+    public Transform turret;
+    public LayerMask targetLayer;
 
 
+    /**
+     * The following code snippet was adapted using ChatGPT-3.5 (OpenAI, 2021).
+     */
 
-
-    // Start is called before the first frame update
-    void Start()
-    {
-        lastmousePosition = new MyVector2(Input.mousePosition);
-    }
-
-    public MyVector2 CalculateEuler()
-    {
-        MyVector2 rv = new MyVector2(0, 0);
-
-        Rotation = new MyVector2(transform.eulerAngles);
-
-        rv = Rotation / 180f / Mathf.PI;
-
-        return rv;
-    }
-
-    // Update is called once per frame
     void Update()
     {
-        MouseDelta = new MyVector2(Input.mousePosition) - lastmousePosition;
-        lastmousePosition = new MyVector2(Input.mousePosition);
-        float MouseRotation = MathsLib.VectorToRadians(MouseDelta);
+       // Get mouse position
+        MyVector2 mousePos = GetMousePosition();
+        
+        // Get turret position
+        MyVector2 turretPos = new MyVector2(turret.position.x, turret.position.y);
 
-        Debug.Log(transform.eulerAngles);
-        Debug.Log(MouseDelta);
-        Debug.Log(eulerRotation);
+        // Calculate direction from turret to mouse position
+        MyVector2 direction = mousePos - turretPos;
 
-        eulerRotation = CalculateEuler();
+        // Calculate angle 
+        float angleRadians = MathsLib.VectorToRadians(direction);
 
-        eulerAngle = Rotation + MouseDelta;
+        // Convert radians to degrees for Quaternion.Euler
+        float angleDegrees = Mathf.Rad2Deg * angleRadians;
 
-        transform.eulerAngles = eulerAngle.ToUnityVector();
+        // Rotate turret to face the mouse position
+        turret.rotation = Quaternion.Euler(new Vector3(0, 0, angleDegrees));
 
+        // Perform line trace to check for target
+        RaycastHit2D hit = Physics2D.Raycast(turretPos.ToUnityVector(), direction.ToUnityVector(), Mathf.Infinity, targetLayer);
 
-        MouseDelta = new MyVector2(Input.mousePosition) - lastmousePosition;
-        lastmousePosition = new MyVector2(Input.mousePosition);
-
-        mouseRotation = new MyVector2 (-MouseDelta.y, MouseDelta.x);
-
-        transform.eulerAngles += mouseRotation.ToUnityVector();
-
-
-        MyVector2 currentEulerAngles = eulerAngle;
-        currentEulerAngles.x = Mathf.Clamp(currentEulerAngles.x, 0, 360f);
-        currentEulerAngles.y = Mathf.Clamp(currentEulerAngles.y, -90f, 90f);
-        transform.eulerAngles = currentEulerAngles.ToUnityVector();
+        // If the line trace hits a target, do something
+        if (hit.collider != null)
+        {
+            Debug.DrawLine(turretPos.ToUnityVector(), hit.point, Color.red); // Draw a debug line to visualize the line trace
+            // Do something with the hit object, e.g., apply damage, etc.
+        }
+        else
+        {
+            Debug.DrawLine(turretPos.ToUnityVector(), (turretPos + direction).ToUnityVector(), Color.green); // Draw a debug line to visualize the line trace
+            // Handle case when the line trace doesn't hit any target
+        }
     }
+
+    private MyVector2 GetMousePosition()
+    {
+        // Get mouse position
+        Vector3 mousePos = Input.mousePosition;
+
+        //convert the mouse position from screen coordinates to world coordinates along the y-axis.
+        mousePos.z = Camera.main.transform.position.y - turret.position.y;
+
+        //converts the  mouse position from screen coordinates to world coordinates
+        Vector3 worldMousePos = Camera.main.ScreenToWorldPoint(mousePos);
+
+        //Creates the new mouse posistion from a 3D vector to a 2D Vector
+        return new MyVector2(worldMousePos.x, worldMousePos.y);
+    
+
+    }
+    /**
+    * End of adaptation
+    */
 }
+
+
+
