@@ -1,11 +1,17 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
+using UnityEditor;
 using UnityEngine;
 
 public class PlayerTank : MonoBehaviour
 {
     public Transform turret;
     public LayerMask targetLayer;
+    public GameObject projectile;
+    float angleRadians = 0f;
+    float angleDegrees = 0f;
+    float projectileSpeed = 10f;
 
 
     /**
@@ -14,7 +20,14 @@ public class PlayerTank : MonoBehaviour
 
     void Update()
     {
-       // Get mouse position
+
+        // Shoot projectile if fire button is pressed
+        if (Input.GetButtonDown("Fire1")) 
+        {
+            ShootProjectile();
+        }
+
+        // Get mouse position
         MyVector2 mousePos = GetMousePosition();
         
         // Get turret position
@@ -24,10 +37,10 @@ public class PlayerTank : MonoBehaviour
         MyVector2 direction = mousePos - turretPos;
 
         // Calculate angle 
-        float angleRadians = MathsLib.VectorToRadians(direction);
+         angleRadians = MathsLib.VectorToRadians(direction);
 
         // Convert radians to degrees for Quaternion.Euler
-        float angleDegrees = Mathf.Rad2Deg * angleRadians;
+         angleDegrees = Mathf.Rad2Deg * angleRadians;
 
         // Rotate turret to face the mouse position
         turret.rotation = Quaternion.Euler(new Vector3(0, 0, angleDegrees));
@@ -46,6 +59,32 @@ public class PlayerTank : MonoBehaviour
             Debug.DrawLine(turretPos.ToUnityVector(), (turretPos + direction).ToUnityVector(), Color.green); // Draw a debug line to visualize the line trace
             // Handle case when the line trace doesn't hit any target
         }
+    }
+
+    public void ShootProjectile()
+    {
+        MyVector2 Bulletdirection = GetMousePosition() - new MyVector2(turret.position.x, turret.position.y);
+        angleRadians = MathsLib.VectorToRadians(Bulletdirection);
+        MyVector2 velocity = MyVector2.RadiansToVector(angleRadians) * projectileSpeed;
+
+        // Create projectile
+        GameObject SpawnProjectile = Instantiate(projectile, Bulletdirection, Quat.Identity());
+
+        // Apply velocity to the projectile
+        Rigidbody2D projectileRigidbody = SpawnProjectile.GetComponent<Rigidbody2D>();
+        if (projectileRigidbody != null)
+        {
+           // projectileRigidbody.velocity = velocity;
+        }
+        else
+        {
+            Debug.LogError("Projectile prefab does not have a Rigidbody component.");
+        }
+    }
+
+    private GameObject Instantiate(GameObject projectile, MyVector2 bulletdirection, Quat quat)
+    {
+        throw new NotImplementedException();
     }
 
     private MyVector2 GetMousePosition()
