@@ -57,6 +57,10 @@ public class MyVector2
         this.x = UnityVector2.x;
         this.y = UnityVector2.y;
     }
+    public UnityEngine.Vector2 ToUnityVector2()
+    {
+        return new UnityEngine.Vector2(x, y);
+    }
 
     public MyVector2(UnityEngine.Quaternion UnityVector2)
     {

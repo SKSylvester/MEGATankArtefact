@@ -11,7 +11,8 @@ public class PlayerTank : MonoBehaviour
     public GameObject projectile;
     float angleRadians = 0f;
     float angleDegrees = 0f;
-    float projectileSpeed = 10f;
+    public float launchVelocity = 700f;
+
 
 
     /**
@@ -63,20 +64,30 @@ public class PlayerTank : MonoBehaviour
 
     public void ShootProjectile()
     {
+        //Get the direction of the bullet
         MyVector2 Bulletdirection = GetMousePosition() - new MyVector2(turret.position.x, turret.position.y);
-        angleRadians = MathsLib.VectorToRadians(Bulletdirection);
-        MyVector2 velocity = MyVector2.RadiansToVector(angleRadians) * projectileSpeed;
 
-        GameObject SpawnProjectile = Instantiate(projectile, turret.position, Quaternion.identity);
+        //Turn the direction into an angle
+        angleRadians = MathsLib.VectorToRadians(Bulletdirection);
+       
+        //Spawn and launch the projectile
+        GameObject SpawnProjectile = Instantiate(projectile, turret.position, turret.rotation);
         Rigidbody2D projectileRigidbody = projectile.GetComponent<Rigidbody2D>();
 
+
+        // Check if the Rigidbody2D component is found
         if (projectileRigidbody != null)
         {
-            // Set the velocity of the projectile
-            projectileRigidbody.velocity = velocity.ToUnityVector() * projectileSpeed;
+            // Calculate the velocity vector
+            MyVector2 velocity = MyVector2.RadiansToVector(angleRadians) * launchVelocity;
 
+            // Apply force to the projectile
+            projectileRigidbody.AddForce(velocity.ToUnityVector2(), ForceMode2D.Impulse);
         }
-
+        else
+        {
+            Debug.LogError("Projectile does not have a Rigidbody2D component.");
+        }
     }
 
     private MyVector2 GetMousePosition()
