@@ -13,7 +13,7 @@ public class Quat
         v = new MyVector2(0, 0);
     }
 
-    public Quat(float Angle, MyVector2 Axis)
+    public Quat (float Angle, MyVector2 Axis)
     {
 
         float halfAngle = Angle / 2;

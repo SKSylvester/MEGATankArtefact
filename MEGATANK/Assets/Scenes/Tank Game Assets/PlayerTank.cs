@@ -40,7 +40,7 @@ public class PlayerTank : MonoBehaviour
          angleRadians = MathsLib.VectorToRadians(direction);
 
         // Convert radians to degrees for Quaternion.Euler
-         angleDegrees = Mathf.Rad2Deg * angleRadians;
+        angleDegrees = MathsLib.FloatRadiansToDegrees(angleRadians);
 
         // Rotate turret to face the mouse position
         turret.rotation = Quaternion.Euler(new Vector3(0, 0, angleDegrees));
@@ -52,7 +52,7 @@ public class PlayerTank : MonoBehaviour
         if (hit.collider != null)
         {
             Debug.DrawLine(turretPos.ToUnityVector(), hit.point, Color.red); // Draw a debug line to visualize the line trace
-            // Do something with the hit object, e.g., apply damage, etc.
+            
         }
         else
         {
@@ -67,24 +67,16 @@ public class PlayerTank : MonoBehaviour
         angleRadians = MathsLib.VectorToRadians(Bulletdirection);
         MyVector2 velocity = MyVector2.RadiansToVector(angleRadians) * projectileSpeed;
 
-        // Create projectile
-        GameObject SpawnProjectile = Instantiate(projectile, Bulletdirection, Quat.Identity());
+        GameObject SpawnProjectile = Instantiate(projectile, turret.position, Quaternion.identity);
+        Rigidbody2D projectileRigidbody = projectile.GetComponent<Rigidbody2D>();
 
-        // Apply velocity to the projectile
-        Rigidbody2D projectileRigidbody = SpawnProjectile.GetComponent<Rigidbody2D>();
         if (projectileRigidbody != null)
         {
-           // projectileRigidbody.velocity = velocity;
-        }
-        else
-        {
-            Debug.LogError("Projectile prefab does not have a Rigidbody component.");
-        }
-    }
+            // Set the velocity of the projectile
+            projectileRigidbody.velocity = velocity.ToUnityVector() * projectileSpeed;
 
-    private GameObject Instantiate(GameObject projectile, MyVector2 bulletdirection, Quat quat)
-    {
-        throw new NotImplementedException();
+        }
+
     }
 
     private MyVector2 GetMousePosition()

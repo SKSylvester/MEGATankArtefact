@@ -18,4 +18,12 @@ public class MathsLib
 
         return rv;
     }
+    public static float FloatRadiansToDegrees(float radians)
+    {
+        float rv = radians;
+
+        rv = radians * Mathf.Rad2Deg;
+
+        return rv; 
+    }
 }
