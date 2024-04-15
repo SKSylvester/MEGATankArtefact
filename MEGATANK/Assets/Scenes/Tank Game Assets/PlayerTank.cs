@@ -7,11 +7,11 @@ using UnityEngine;
 public class PlayerTank : MonoBehaviour
 {
     public Transform turret;
-    public LayerMask targetLayer;
     public GameObject projectile;
     float angleRadians = 0f;
     float angleDegrees = 0f;
     public float launchVelocity = 700f;
+
 
 
 
@@ -46,20 +46,6 @@ public class PlayerTank : MonoBehaviour
         // Rotate turret to face the mouse position
         turret.rotation = Quaternion.Euler(new Vector3(0, 0, angleDegrees));
 
-        // Perform line trace to check for target
-        RaycastHit2D hit = Physics2D.Raycast(turretPos.ToUnityVector(), direction.ToUnityVector(), Mathf.Infinity, targetLayer);
-
-        // If the line trace hits a target, do something
-        if (hit.collider != null)
-        {
-            Debug.DrawLine(turretPos.ToUnityVector(), hit.point, Color.red); // Draw a debug line to visualize the line trace
-            
-        }
-        else
-        {
-            Debug.DrawLine(turretPos.ToUnityVector(), (turretPos + direction).ToUnityVector(), Color.green); // Draw a debug line to visualize the line trace
-            // Handle case when the line trace doesn't hit any target
-        }
     }
 
     public void ShootProjectile()
@@ -72,17 +58,22 @@ public class PlayerTank : MonoBehaviour
        
         //Spawn and launch the projectile
         GameObject SpawnProjectile = Instantiate(projectile, turret.position, turret.rotation);
-        Rigidbody2D projectileRigidbody = projectile.GetComponent<Rigidbody2D>();
+        Rigidbody2D projectileRigidbody = SpawnProjectile.GetComponent<Rigidbody2D>();
 
+        Debug.Log("Bulletdirection" + Bulletdirection);
+
+        Debug.Log("angleRadians" + angleRadians);
 
         // Check if the Rigidbody2D component is found
         if (projectileRigidbody != null)
         {
             // Calculate the velocity vector
-            MyVector2 velocity = MyVector2.RadiansToVector(angleRadians) * launchVelocity;
+            MyVector2 velocity = Bulletdirection.Normalize() * launchVelocity;
 
             // Apply force to the projectile
-            projectileRigidbody.AddForce(velocity.ToUnityVector2(), ForceMode2D.Impulse);
+            projectileRigidbody.velocity = velocity.ToUnityVector2();
+
+            Debug.Log("projectileRigidbody.velocity" + projectileRigidbody.velocity);
         }
         else
         {
