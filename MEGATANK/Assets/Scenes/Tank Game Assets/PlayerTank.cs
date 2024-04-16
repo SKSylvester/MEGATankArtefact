@@ -14,11 +14,6 @@ public class PlayerTank : MonoBehaviour
 
 
 
-
-    /**
-     * The following code snippet was adapted using ChatGPT-3.5 (OpenAI, 2021).
-     */
-
     void Update()
     {
 
@@ -81,6 +76,9 @@ public class PlayerTank : MonoBehaviour
         }
     }
 
+    /**
+* The following code snippet was adapted using ChatGPT-3.5 (OpenAI, 2021).
+*/
     private MyVector2 GetMousePosition()
     {
         // Get mouse position
@@ -94,12 +92,11 @@ public class PlayerTank : MonoBehaviour
 
         //Creates the new mouse posistion from a 3D vector to a 2D Vector
         return new MyVector2(worldMousePos.x, worldMousePos.y);
-    
 
     }
     /**
-    * End of adaptation
-    */
+* End of adaptation
+*/
 }
 
 
