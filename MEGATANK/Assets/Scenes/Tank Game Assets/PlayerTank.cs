@@ -10,18 +10,15 @@ public class PlayerTank : MonoBehaviour
     public GameObject projectile;
     float angleRadians = 0f;
     float angleDegrees = 0f;
-    public float launchVelocity = 700f;
-
+    public float launchVelocity = 10f;
+    public float launchVelocityOverTime = 0f;
 
 
     void Update()
     {
 
-        // Shoot projectile if fire button is pressed
-        if (Input.GetButtonDown("Fire1")) 
-        {
+
             ShootProjectile();
-        }
 
         // Get mouse position
         MyVector2 mousePos = GetMousePosition();
@@ -51,29 +48,45 @@ public class PlayerTank : MonoBehaviour
         //Turn the direction into an angle
         angleRadians = MathsLib.VectorToRadians(Bulletdirection);
        
-        //Spawn and launch the projectile
-        GameObject SpawnProjectile = Instantiate(projectile, turret.position, turret.rotation);
-        Rigidbody2D projectileRigidbody = SpawnProjectile.GetComponent<Rigidbody2D>();
-
-        Debug.Log("Bulletdirection" + Bulletdirection);
-
-        Debug.Log("angleRadians" + angleRadians);
-
-        // Check if the Rigidbody2D component is found
-        if (projectileRigidbody != null)
+        
+        if (Input.GetMouseButton(0))
         {
-            // Calculate the velocity vector
-            MyVector2 velocity = Bulletdirection.Normalize() * launchVelocity;
+            Debug.Log("The left mouse button is being held down.");
 
-            // Apply force to the projectile
-            projectileRigidbody.velocity = velocity.ToUnityVector2();
+             launchVelocityOverTime +=  5f * Time.deltaTime * 2;
 
-            Debug.Log("projectileRigidbody.velocity" + projectileRigidbody.velocity);
         }
-        else
+        if (Input.GetMouseButtonUp(0))
         {
-            Debug.LogError("Projectile does not have a Rigidbody2D component.");
+            //Spawn and launch the projectile
+            GameObject SpawnProjectile = Instantiate(projectile, turret.position, turret.rotation);
+            Rigidbody2D projectileRigidbody = SpawnProjectile.GetComponent<Rigidbody2D>();
+
+            Debug.Log("Bulletdirection" + Bulletdirection);
+
+            Debug.Log("angleRadians" + angleRadians);
+
+
+            // Check if the Rigidbody2D component is found
+            if (projectileRigidbody != null)
+            {
+
+                // Calculate the velocity vector
+                MyVector2 velocity = Bulletdirection.Normalize() * (launchVelocity + launchVelocityOverTime);
+
+                // Apply force to the projectile
+                projectileRigidbody.velocity = velocity.ToUnityVector2();
+
+                launchVelocityOverTime = 0;
+
+                Debug.Log("projectileRigidbody.velocity" + projectileRigidbody.velocity);
+            }
+            else
+            {
+                Debug.LogError("Projectile does not have a Rigidbody2D component.");
+            }
         }
+
     }
 
     /**

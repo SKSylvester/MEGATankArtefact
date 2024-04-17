@@ -95,7 +95,7 @@ public class MyVector2
         float rv = 0f;
 
         // Calculate the magnitude of the vector using the Pythagorean theorem
-        rv = Mathf.Sqrt(x * x) + (y * y);
+        rv = Mathf.Sqrt(x * x + y * y);
         //sqaure roots the vector to turns it into 1 whole number 
 
         return rv;

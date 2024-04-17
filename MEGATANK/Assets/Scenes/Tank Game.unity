@@ -642,7 +642,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   turret: {fileID: 1044116279}
   projectile: {fileID: 7127063081381033144, guid: 101350ddcb248f94c8aa43be97b942b3, type: 3}
-  launchVelocity: 20
+  launchVelocity: 10
+  launchVelocityOverTime: 0
 --- !u!1 &1305048149
 GameObject:
   m_ObjectHideFlags: 0
