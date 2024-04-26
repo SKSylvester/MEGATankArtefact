@@ -93,6 +93,17 @@ public class MyMatrix4x4
         return rv;
     }
 
+    // Matrix and Vector2 operator for 2D transformation
+    public static MyVector2 operator *(MyMatrix4x4 lhs, MyVector2 rhs)
+    {
+        MyVector2 rv = new MyVector2(0,0);
+
+        rv.x = lhs.values[0, 0] * rhs.x + lhs.values[0, 1] * rhs.y + lhs.values[0, 3];
+        rv.y = lhs.values[1, 0] * rhs.x + lhs.values[1, 1] * rhs.y + lhs.values[1, 3];
+
+        return rv;
+    }
+
     public static MyMatrix4x4 operator *(MyMatrix4x4 lhs, MyMatrix4x4 rhs)
     {
         MyMatrix4x4 rv = Identity;

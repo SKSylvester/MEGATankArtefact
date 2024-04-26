@@ -14,7 +14,16 @@ public class PlayerTank : MonoBehaviour
     float angleDegrees = 0f;
     public float launchVelocity = 10f;
     public float launchVelocityOverTime = 0f;
+    public float Angle = 0f;
+    MyVector2[] ModelSpaceVertices;
 
+    private void Start()
+    {
+        SpriteRenderer SR = GetComponent<SpriteRenderer>();
+        Vector2[] unityVertices = SR.sprite.vertices;
+        MyVector2[] ModelSpaceVertices = new MyVector2[unityVertices.Length];
+
+    }
 
     void Update()
     {
@@ -39,8 +48,19 @@ public class PlayerTank : MonoBehaviour
         // Rotate turret to face the mouse position
         turret.rotation = Quaternion.Euler(new Vector3(0, 0, angleDegrees));
 
-        //MyMatrix4x4 Roll Use from workshop code
+        MyVector2[] TranformedVertices = new MyVector2[ModelSpaceVertices.Length];
 
+        MyMatrix4x4 rollMatrix = new MyMatrix4x4(
+            new MyVector2(Mathf.Cos(Angle), Mathf.Sin(Angle)),
+            new MyVector2(-Mathf.Sin(Angle), Mathf.Cos(Angle)),
+            new MyVector2(0, 0),
+            new MyVector2(0, 0));
+        
+        for (int i = 0; i < TranformedVertices.Length; i++)
+        {
+            MyVector2 RolledVertex = rollMatrix * ModelSpaceVertices[i];
+            TranformedVertices[i] = RolledVertex;
+        }
     }
 
     public void ShootProjectile()
