@@ -5,6 +5,7 @@ using Unity.VisualScripting;
 using UnityEditor;
 using UnityEngine;
 
+
 public class PlayerTank : MonoBehaviour
 {
 
@@ -14,14 +15,29 @@ public class PlayerTank : MonoBehaviour
     float angleDegrees = 0f;
     public float launchVelocity = 10f;
     public float launchVelocityOverTime = 0f;
-    public float Angle = 0f;
-    MyVector2[] ModelSpaceVertices;
+    public float TurretAngle = 0f;
+    public MyVector2[] ModelSpaceVertices;
 
     private void Start()
     {
+        /**
+* The following code snippet was adapted using ChatGPT-3.5 (OpenAI, 2021).
+*/
+        //Get Sprite Render
         SpriteRenderer SR = GetComponent<SpriteRenderer>();
+
+        //Put all the Sprite Vertices in a Vector2 Array
         Vector2[] unityVertices = SR.sprite.vertices;
-        MyVector2[] ModelSpaceVertices = new MyVector2[unityVertices.Length];
+
+        //Get the Vertices of the sprite and add it the the ModelSpaceVertices
+        ModelSpaceVertices = new MyVector2[unityVertices.Length];
+        for (int i = 0; i < unityVertices.Length; i++)
+        {
+            ModelSpaceVertices[i] = new MyVector2(unityVertices[i].x, unityVertices[i].y);
+        }
+        /**
+* End of adaptation
+*/
 
     }
 
@@ -48,14 +64,21 @@ public class PlayerTank : MonoBehaviour
         // Rotate turret to face the mouse position
         turret.rotation = Quaternion.Euler(new Vector3(0, 0, angleDegrees));
 
+        // Create an array to store the transformed vertices
         MyVector2[] TranformedVertices = new MyVector2[ModelSpaceVertices.Length];
 
+        // Calculates the angle of the turret in degrees
+        TurretAngle = MathsLib.FloatRadiansToDegrees(turret.rotation.eulerAngles.z);
+
+        // Define a rotation matrix based on the turret angle
         MyMatrix4x4 rollMatrix = new MyMatrix4x4(
-            new MyVector2(Mathf.Cos(Angle), Mathf.Sin(Angle)),
-            new MyVector2(-Mathf.Sin(Angle), Mathf.Cos(Angle)),
+            new MyVector2(Mathf.Cos(TurretAngle), Mathf.Sin(TurretAngle)),
+            new MyVector2(-Mathf.Sin(TurretAngle), Mathf.Cos(TurretAngle)),
             new MyVector2(0, 0),
             new MyVector2(0, 0));
-        
+
+        // Applies the rotation matrix to each vertex
+
         for (int i = 0; i < TranformedVertices.Length; i++)
         {
             MyVector2 RolledVertex = rollMatrix * ModelSpaceVertices[i];
